@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm -v)",
+      "WebFetch(domain:docs.photon.codes)",
+      "WebFetch(domain:docs.butterbase.ai)",
+      "WebFetch(domain:photon.codes)",
+      "WebFetch(domain:docs.xtrace.ai)",
+      "WebFetch(domain:docs.rocketride.org)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm run *)",
+      "Bash(echo \"---EXIT: $?\")",
+      "Bash(claude mcp *)",
+      "mcp__butterbase__manage_app",
+      "mcp__butterbase__init_app",
+      "mcp__butterbase__manage_schema",
+      "mcp__butterbase__manage_ai",
+      "mcp__butterbase__select_rows",
+      "mcp__butterbase__insert_row",
+      "mcp__butterbase__manage_auth_config",
+      "Bash(npx tsx *)",
+      "mcp__butterbase__manage_billing",
+      "mcp__butterbase__butterbase_docs",
+      "Bash(grep -vE '^\\\\s*#|^\\\\s*$')",
+      "Bash(awk -F= '/^ANTHROPIC_BYOK_KEY=/{v=substr\\($0,index\\($0,\"=\"\\)+1\\); print \"value length:\", length\\(v\\); print \"starts with sk-ant:\", \\(v ~ /^sk-ant/\\); print \"has surrounding quotes/spaces:\", \\(v ~ /^[ \"'\"'\"']/ || v ~ /[ \"'\"'\"']$/\\)}' /Users/ekansharora/Documents/voice-commentary/.env)",
+      "Bash(echo \"exit:$?\")",
+      "Bash([ -r \"$HOME/Library/Messages/chat.db\" ])",
+      "Read(//Users/ekansharora/Library/Messages//**)",
+      "Read(//Users/ekansharora/Library/Messages/**)",
+      "Bash(grep -vE \"Loading|commentators loaded|Reincarnation|Name a commentator|Commentators:|Reply without|type 'exit'|^\\\\s*$\")",
+      "Bash(echo \"=== exit: $? \\(no matches = clean\\) ===\")"
+    ]
+  }
+}

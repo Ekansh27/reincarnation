@@ -1,0 +1,28 @@
+{
+  "name": "reincarnation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Commentary style-transfer over iMessage — reimagine iconic sports moments in a different legendary commentator's voice.",
+  "scripts": {
+    "seed": "tsx src/seed.ts",
+    "smoke": "tsx src/smoke.ts",
+    "smoke:xtrace": "tsx src/smoke-xtrace.ts",
+    "set-byok": "tsx src/set-byok.ts",
+    "start": "tsx src/index.ts",
+    "chat": "tsx src/chat.ts",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@butterbase/sdk": "^2.4.0",
+    "@xtraceai/memory": "^0.2.1",
+    "dotenv": "^16.4.5",
+    "spectrum-ts": "^1.18.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "@types/node": "^22.9.0"
+  }
+}

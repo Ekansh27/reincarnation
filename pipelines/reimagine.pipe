@@ -1,0 +1,48 @@
+{
+  "name": "reimagine",
+  "description": "Identify an iconic cricket moment from a fan's request, then reimagine it in a target commentator's voice. Both LLM nodes route through the Butterbase AI gateway.",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "source",
+      "subtype": "webhook",
+      "config": { "path": "/reimagine" }
+    },
+    {
+      "id": "identify",
+      "type": "llm",
+      "subtype": "openai_compatible",
+      "config": {
+        "base_url": "https://api.butterbase.ai/v1",
+        "api_key_env": "BUTTERBASE_SERVICE_KEY",
+        "model": "anthropic/claude-3.5-sonnet",
+        "temperature": 0,
+        "system": "You match a fan's request to exactly one iconic cricket moment from the provided catalogue. Reply with ONLY the slug of the best match.",
+        "prompt": "Catalogue:\n{{candidate_moments}}\n\nRequest: \"{{query}}\"\n\nBest-match slug:"
+      }
+    },
+    {
+      "id": "generate",
+      "type": "llm",
+      "subtype": "openai_compatible",
+      "config": {
+        "base_url": "https://api.butterbase.ai/v1",
+        "api_key_env": "BUTTERBASE_SERVICE_KEY",
+        "model": "anthropic/claude-3.5-sonnet",
+        "temperature": 0.85,
+        "system": "Reimagine the matched cricket moment as if {{target_commentator}} were on the mic. Use these style notes:\n{{style_context}}\nOutput ONLY 2-4 sentences of live commentary.",
+        "prompt": "Matched moment slug: {{identify.output}}\nReimagine it as {{target_commentator}}:"
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "subtype": "response"
+    }
+  ],
+  "lanes": [
+    { "from": { "nodeId": "input", "lane": "message" }, "to": { "nodeId": "identify", "lane": "input" } },
+    { "from": { "nodeId": "identify", "lane": "output" }, "to": { "nodeId": "generate", "lane": "input" } },
+    { "from": { "nodeId": "generate", "lane": "output" }, "to": { "nodeId": "output", "lane": "message" } }
+  ]
+}

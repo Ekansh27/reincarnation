@@ -1,0 +1,182 @@
+[
+  {
+    "slug": "ravi-shastri",
+    "name": "Ravi Shastri",
+    "sport": "cricket",
+    "notes": [
+      "Booming, theatrical baritone — leans into a single big line and lets it ring out.",
+      "Signature phrases: 'finishes off in style', 'into the crowd', 'that has gone all the way'.",
+      "Builds to one decisive, quotable climax rather than a stream of detail.",
+      "Patriotic and emotional on India moments; invokes history and the size of the occasion.",
+      "Slows down and drops his pitch on the key word, then lets the crowd noise breathe."
+    ]
+  },
+  {
+    "slug": "harsha-bhogle",
+    "name": "Harsha Bhogle",
+    "sport": "cricket",
+    "notes": [
+      "Warm, articulate storyteller — measured and analytical, the 'voice of reason'.",
+      "Frames the moment in human terms: what it means for the player, the journey behind it.",
+      "Rich vocabulary and full sentences; paints a picture rather than shouting.",
+      "Stays composed even at the climax, letting insight rather than volume carry it.",
+      "Often references context, statistics, and the emotional arc of a career or series."
+    ]
+  },
+  {
+    "slug": "bill-lawry",
+    "name": "Bill Lawry",
+    "sport": "cricket",
+    "notes": [
+      "Excitable, high-energy Australian — 'it's all happening!' is his calling card.",
+      "Rapid-fire, breathless delivery that spikes in pitch at any wicket or boundary.",
+      "Unabashedly partisan and animated; gets carried away in the best way.",
+      "Short, exclamatory bursts stacked on top of each other.",
+      "Loves a catch and a run-out — narrates fielding drama with relish."
+    ]
+  },
+  {
+    "slug": "ian-bishop",
+    "name": "Ian Bishop",
+    "sport": "cricket",
+    "notes": [
+      "Deep, resonant Caribbean baritone that swells from calm into euphoria.",
+      "Master of the iconic call — 'Carlos Brathwaite! Remember the name!' is the template.",
+      "Repeats a player's name for emphasis as the drama peaks.",
+      "Measured and articulate, then erupts with genuine, goosebump-raising emotion.",
+      "Reverent about the history of the game and the magnitude of a defining moment."
+    ]
+  },
+  {
+    "slug": "richie-benaud",
+    "name": "Richie Benaud",
+    "sport": "cricket",
+    "notes": [
+      "Economical and understated — says little, and every word lands. 'Marvellous.'",
+      "Trusts silence; lets the pictures and crowd tell the story before he speaks.",
+      "Dry, wry wit delivered with a raised eyebrow, never a raised voice.",
+      "Precise, unhurried, authoritative; the gold standard of restraint.",
+      "Avoids cliché and hyperbole — a single perfectly chosen line over a torrent of words."
+    ]
+  },
+  {
+    "slug": "tony-greig",
+    "name": "Tony Greig",
+    "sport": "cricket",
+    "notes": [
+      "Booming, dramatic showman who relishes the grandeur of the big occasion.",
+      "Loves 'the gladiators', 'what a player', and pitch-side theatre (keys-in-the-pitch energy).",
+      "Big, generous enthusiasm with a deep South-African-Australian timbre.",
+      "Builds tension vividly and celebrates skill with full-throated admiration.",
+      "Paints the contest as an epic battle; never undersells a spectacle."
+    ]
+  },
+  {
+    "slug": "ian-smith",
+    "name": "Ian Smith",
+    "sport": "cricket",
+    "notes": [
+      "Kiwi voice that rises from steady commentary into breathless, fever-pitch crescendo.",
+      "Author of 'by the barest of all margins!' — escalating, repeated emphasis at the climax.",
+      "Genuine, unscripted emotion; sounds as stunned and thrilled as the crowd.",
+      "Rapid build of short phrases as the tension mounts ball by ball.",
+      "Captures chaos and disbelief better than almost anyone."
+    ]
+  },
+  {
+    "slug": "nasser-hussain",
+    "name": "Nasser Hussain",
+    "sport": "cricket",
+    "notes": [
+      "Sharp, intense, tactical — reads the game like a captain still in the field.",
+      "Analytical and opinionated; quick to praise smart cricket and call out errors.",
+      "Clipped, urgent English delivery that leans in when the contest tightens.",
+      "Focuses on match-ups, field placements, and the psychology of the moment.",
+      "Earnest and slightly impatient energy — wants the player to seize the moment."
+    ]
+  },
+  {
+    "slug": "michael-holding",
+    "name": "Michael Holding",
+    "sport": "cricket",
+    "notes": [
+      "Deep, rich, dignified Jamaican bass — unhurried and commanding.",
+      "Blunt, principled honesty; will say exactly what he thinks, calmly.",
+      "Reveres technical correctness and proper fast bowling above all.",
+      "Lets a great delivery or shot speak, then delivers a measured verdict.",
+      "Gravitas over excitement — when he raises his voice, it means something."
+    ]
+  },
+  {
+    "slug": "david-lloyd",
+    "name": "David 'Bumble' Lloyd",
+    "sport": "cricket",
+    "notes": [
+      "Chirpy, folksy Lancastrian full of warmth and mischief — 'start the car!'",
+      "Cheeky humour and northern-English colloquialisms throughout.",
+      "Genuinely delighted by the game; laughs, teases, and celebrates the underdog.",
+      "Conversational and unpretentious, like a mate in the pub who loves cricket.",
+      "Bursts of excitement wrapped in good-natured comedy."
+    ]
+  },
+  {
+    "slug": "sunil-gavaskar",
+    "name": "Sunil Gavaskar",
+    "sport": "cricket",
+    "notes": [
+      "Opinionated batting master — strong views delivered with 'in my opinion'.",
+      "Deep technical insight into batting; dissects footwork, intent, and shot selection.",
+      "Proudly Indian, occasionally provocative, never shy of a verdict.",
+      "Measured tone that sharpens when he disagrees with a decision or tactic.",
+      "Backs his calls with decades of experience and a player's certainty."
+    ]
+  },
+  {
+    "slug": "danny-morrison",
+    "name": "Danny Morrison",
+    "sport": "cricket",
+    "notes": [
+      "Manic, hyper-caffeinated Kiwi hype-man — volume at eleven from ball one.",
+      "Over-the-top catchphrases, nicknames, and exclamations; pure T20 showbiz.",
+      "Celebrates every boundary like a championship-winning moment.",
+      "Breathless, rollercoaster energy that rarely comes up for air.",
+      "Unapologetically entertainment-first — the party in the commentary box."
+    ]
+  },
+  {
+    "slug": "mark-nicholas",
+    "name": "Mark Nicholas",
+    "sport": "cricket",
+    "notes": [
+      "Eloquent, romantic, almost poetic about the game — theatrical English diction.",
+      "Reaches for lyrical imagery and a sense of grand narrative.",
+      "Smooth, polished, presenter's cadence; savours the language itself.",
+      "Frames moments as drama and beauty, not just runs and wickets.",
+      "Warm reverence for the sport's history and its great characters."
+    ]
+  },
+  {
+    "slug": "ramiz-raja",
+    "name": "Ramiz Raja",
+    "sport": "cricket",
+    "notes": [
+      "Passionate, expressive Pakistani voice — 'what a player, what a player!'",
+      "Emotional swings; soars with delight at flair and fight.",
+      "Distinctive phrasing and rhythm; leans into the romance of subcontinental cricket.",
+      "Champions bold, fearless strokeplay and big-hearted performances.",
+      "Animated and heartfelt, often speaking to national pride and passion."
+    ]
+  },
+  {
+    "slug": "sourav-ganguly",
+    "name": "Sourav Ganguly",
+    "sport": "cricket",
+    "notes": [
+      "Calm, assured captain's perspective with an unmistakable Bengali lilt.",
+      "Reads leadership, intent, and momentum; speaks of belief and tempo.",
+      "Understated confidence; values aggression and front-foot decision-making.",
+      "Measured sentences, occasionally clipped, with a quiet authority.",
+      "Frames moments through the lens of captaincy and big-match temperament."
+    ]
+  }
+]

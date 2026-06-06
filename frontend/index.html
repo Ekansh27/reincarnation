@@ -3,308 +3,159 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Reincarnation — iconic cricket moments, in another legend's voice</title>
-<meta name="description" content="Text an iconic sports moment and hear it called by a different legendary commentator. Over iMessage. Built for the Agentic AI SF Hackathon." />
+<title>Reincarnation — an iconic cricket moment, in another legend's voice</title>
+<meta name="description" content="Text an iconic cricket moment. Hear it called in a different legend's voice. Over iMessage." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..500&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root{
-    --paper:#f3e9cf;
-    --paper-2:#ecdfbc;
-    --ink:#1c160f;
-    --ink-soft:#43382a;
-    --ox:#8a2231;
-    --ox-deep:#6b1722;
-    --field:#2f4a3b;
-    --gold:#c7923a;
-    --rule:rgba(28,22,15,.22);
+    --paper:#f3e9cf;--paper-2:#ecdfbc;--ink:#1c160f;--ink-soft:#43382a;
+    --ox:#8a2231;--field:#2f4a3b;--gold:#c7923a;--rule:rgba(28,22,15,.22);
     --shadow:14px 14px 0 rgba(28,22,15,.9);
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:"Newsreader",Georgia,serif;
-    font-size:19px;
-    line-height:1.55;
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;font-size:19px;line-height:1.55;
     -webkit-font-smoothing:antialiased;
     background-image:
-      radial-gradient(circle at 12% 18%, rgba(138,34,49,.05), transparent 40%),
-      radial-gradient(circle at 88% 12%, rgba(47,74,59,.06), transparent 38%),
+      radial-gradient(circle at 12% 14%, rgba(138,34,49,.05), transparent 42%),
+      radial-gradient(circle at 90% 90%, rgba(47,74,59,.06), transparent 40%),
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
   }
   ::selection{background:var(--ox);color:var(--paper);}
   a{color:inherit;}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 28px;}
 
-  /* ---- top wire bar ---- */
-  .wire{
-    border-bottom:2px solid var(--ink);
-    background:var(--ink);
-    color:var(--paper);
-    font-family:"Spline Sans Mono",monospace;
-    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
-    overflow:hidden;white-space:nowrap;
-  }
-  .wire .scroll{display:inline-block;padding:9px 0;animation:ticker 38s linear infinite;}
-  .wire .scroll span{padding:0 26px;opacity:.82;}
-  .wire .scroll b{color:var(--gold);font-weight:600;}
-  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-  /* ---- masthead ---- */
-  header.mast{padding:34px 0 18px;border-bottom:3px double var(--ink);}
-  .mast-row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;}
-  .kicker{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--ox);}
-  .edition{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);text-align:right;line-height:1.7;}
+  /* hero */
+  header.hero{padding:62px 0 50px;border-bottom:3px double var(--ink);}
+  .onair{display:inline-flex;align-items:center;gap:10px;font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--ox);margin-bottom:22px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--ox);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(138,34,49,.55)}70%{box-shadow:0 0 0 13px rgba(138,34,49,0)}100%{box-shadow:0 0 0 0 rgba(138,34,49,0)}}
   h1.title{
-    font-family:"Fraunces",serif;font-optical-sizing:auto;
-    font-weight:900;font-size:clamp(58px,13vw,178px);
-    line-height:.82;letter-spacing:-.03em;margin:.18em 0 .12em;
-    text-transform:uppercase;
+    font-family:"Fraunces",serif;font-optical-sizing:auto;font-weight:900;
+    font-size:clamp(56px,12vw,150px);line-height:.84;letter-spacing:-.03em;
+    margin:0 0 .2em;text-transform:uppercase;
   }
   h1.title em{font-style:italic;font-weight:500;color:var(--ox);}
-  .dek{font-size:clamp(20px,2.4vw,27px);max-width:60ch;color:var(--ink-soft);font-style:italic;}
-  .dek b{font-style:normal;color:var(--ink);font-weight:600;}
+  .pitch{font-family:"Fraunces",serif;font-weight:400;font-size:clamp(24px,3.4vw,38px);line-height:1.18;max-width:18ch;margin:0 0 6px;}
+  .pitch b{font-weight:700;}
+  .pitch .ox{color:var(--ox);font-style:italic;}
+  .sub{font-size:18px;color:var(--ink-soft);font-style:italic;max-width:46ch;margin:14px 0 34px;}
 
-  /* ---- on-air + cta ---- */
-  .hero-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:40px;align-items:stretch;padding:36px 0 14px;}
-  @media(max-width:840px){.hero-grid{grid-template-columns:1fr;}}
-  .onair{display:inline-flex;align-items:center;gap:10px;font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ox);margin-bottom:14px;}
-  .dot{width:11px;height:11px;border-radius:50%;background:var(--ox);box-shadow:0 0 0 0 rgba(138,34,49,.6);animation:pulse 1.8s infinite;}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(138,34,49,.55)}70%{box-shadow:0 0 0 14px rgba(138,34,49,0)}100%{box-shadow:0 0 0 0 rgba(138,34,49,0)}}
-  .lede p{font-size:21px;margin:0 0 16px;}
-  .lede .first::first-letter{font-family:"Fraunces",serif;font-weight:900;float:left;font-size:78px;line-height:.7;padding:8px 12px 0 0;color:var(--ox);}
-
-  .ticket{
-    background:var(--ink);color:var(--paper);padding:30px 28px;
-    box-shadow:var(--shadow);position:relative;align-self:start;
-    border:2px solid var(--ink);
-  }
-  .ticket::before,.ticket::after{content:"";position:absolute;width:26px;height:26px;border-radius:50%;background:var(--paper);top:50%;transform:translateY(-50%);}
-  .ticket::before{left:-15px;}.ticket::after{right:-15px;}
-  .ticket .lbl{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);}
-  .ticket h3{font-family:"Fraunces",serif;font-weight:700;font-size:25px;margin:8px 0 16px;line-height:1.12;}
+  .cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
   .num{
-    display:flex;align-items:center;gap:12px;font-family:"Spline Sans Mono",monospace;
-    font-weight:600;font-size:clamp(26px,4.4vw,38px);letter-spacing:.01em;color:var(--paper);
-    text-decoration:none;border:1.5px dashed rgba(243,233,207,.45);padding:14px 16px;
-    transition:.18s ease;
+    display:inline-flex;align-items:center;gap:13px;text-decoration:none;
+    background:var(--ink);color:var(--paper);font-family:"Spline Sans Mono",monospace;
+    font-weight:600;font-size:clamp(22px,3.6vw,30px);letter-spacing:.01em;
+    padding:16px 22px;box-shadow:var(--shadow);transition:.16s ease;border:2px solid var(--ink);
   }
-  .num:hover{background:var(--ox);border-color:var(--ox);transform:translate(-2px,-2px);}
-  .num svg{flex:0 0 auto;}
-  .ticket .hint{font-size:15.5px;color:rgba(243,233,207,.72);margin-top:14px;font-style:italic;}
-  .ticket .sample{font-family:"Spline Sans Mono",monospace;font-size:12.5px;color:var(--gold);margin-top:6px;letter-spacing:.02em;}
+  .num:hover{background:var(--ox);border-color:var(--ox);transform:translate(-3px,-3px);box-shadow:17px 17px 0 rgba(28,22,15,.9);}
+  .cta .how{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.04em;line-height:1.7;color:var(--ink-soft);text-transform:uppercase;}
+  .cta .how b{color:var(--ox);}
 
-  /* ---- section heads ---- */
+  /* proof: one moment, two voices */
   section{padding:54px 0;}
-  .shead{display:flex;align-items:baseline;gap:18px;border-bottom:2px solid var(--ink);padding-bottom:12px;margin-bottom:34px;}
-  .shead .no{font-family:"Spline Sans Mono",monospace;font-size:13px;color:var(--ox);letter-spacing:.2em;}
-  .shead h2{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(30px,5vw,52px);letter-spacing:-.02em;margin:0;line-height:1;text-transform:uppercase;}
-  .shead .meta{margin-left:auto;font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .shead{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ox);margin-bottom:18px;}
+  .feature{border:2px solid var(--ink);box-shadow:var(--shadow);background:var(--paper-2);}
+  .feature .moment{padding:22px 26px;background:var(--ink);color:var(--paper);}
+  .feature .moment .yr{font-family:"Spline Sans Mono",monospace;color:var(--gold);font-size:12.5px;letter-spacing:.2em;}
+  .feature .moment h3{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(23px,3.4vw,32px);margin:6px 0 9px;line-height:1.05;}
+  .feature .moment .og{font-style:italic;color:rgba(243,233,207,.82);font-size:16.5px;}
+  .feature .moment .og b{color:var(--gold);font-style:normal;font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;}
+  @media(max-width:820px){.twocol{grid-template-columns:1fr;}}
+  .twocol .col{padding:26px 26px;}
+  .twocol .col+.col{border-left:2px solid var(--ink);}
+  @media(max-width:820px){.twocol .col+.col{border-left:0;border-top:2px solid var(--ink);}}
+  .voicetag{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ox);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+  .voicetag::before{content:"";width:24px;height:2px;background:var(--ox);}
+  .voicetag.alt{color:var(--field);}.voicetag.alt::before{background:var(--field);}
+  .vname{font-family:"Fraunces",serif;font-weight:700;font-size:22px;margin:0 0 9px;}
+  .script{font-size:18px;line-height:1.58;color:var(--ink-soft);}
+  .feature .foot{padding:14px 26px;border-top:2px solid var(--ink);font-style:italic;color:var(--ink-soft);font-size:16px;}
+  .feature .foot b{font-style:normal;color:var(--ink);}
 
-  /* ---- featured A/B ---- */
-  .feature{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--ink);box-shadow:var(--shadow);background:var(--paper-2);}
-  @media(max-width:840px){.feature{grid-template-columns:1fr;}}
-  .feature .col{padding:30px 28px;}
-  .feature .col+.col{border-left:2px solid var(--ink);}
-  @media(max-width:840px){.feature .col+.col{border-left:0;border-top:2px solid var(--ink);}}
-  .feature .moment{grid-column:1/-1;padding:24px 28px;border-bottom:2px solid var(--ink);background:var(--ink);color:var(--paper);}
-  .feature .moment .yr{font-family:"Spline Sans Mono",monospace;color:var(--gold);font-size:13px;letter-spacing:.2em;}
-  .feature .moment h3{font-family:"Fraunces",serif;font-weight:700;font-size:clamp(24px,3.6vw,34px);margin:6px 0 10px;line-height:1.05;}
-  .feature .moment .og{font-style:italic;color:rgba(243,233,207,.82);font-size:17px;}
-  .feature .moment .og b{color:var(--gold);font-style:normal;font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px;}
-  .voicetag{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ox);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
-  .voicetag::before{content:"";width:26px;height:2px;background:var(--ox);}
-  .voicetag.alt{color:var(--field);}
-  .voicetag.alt::before{background:var(--field);}
-  .feature .vname{font-family:"Fraunces",serif;font-weight:700;font-size:23px;margin:0 0 10px;}
-  .feature .script{font-size:18.5px;line-height:1.6;}
-  .feature .script::before{content:"“";font-family:"Fraunces",serif;color:var(--ox);font-size:30px;line-height:0;vertical-align:-8px;margin-right:2px;}
-
-  /* ---- wire of clips ---- */
-  .clips{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;}
-  @media(max-width:760px){.clips{grid-template-columns:1fr;}}
-  .clip{background:var(--paper-2);border:1.5px solid var(--ink);padding:24px 24px 22px;position:relative;transition:.2s ease;}
-  .clip:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink);}
-  .clip .top{display:flex;justify-content:space-between;align-items:center;font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:14px;}
-  .clip .top .yr{color:var(--ox);}
-  .clip h4{font-family:"Fraunces",serif;font-weight:700;font-size:21px;line-height:1.1;margin:0 0 14px;}
-  .clip .as{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);margin-bottom:8px;}
-  .clip .as b{color:var(--ink);}
-  .clip .body{font-size:17px;line-height:1.55;color:var(--ink-soft);}
-  .clip .body b{color:var(--ink);font-weight:600;}
-
-  /* ---- roster marquee ---- */
-  .roster{background:var(--ink);color:var(--paper);border-top:3px double var(--paper);border-bottom:3px double var(--paper);overflow:hidden;padding:22px 0;}
-  .roster .run{display:flex;gap:0;white-space:nowrap;animation:ticker 44s linear infinite;font-family:"Fraunces",serif;font-weight:600;font-size:clamp(24px,4vw,40px);}
-  .roster .run span{padding:0 30px;}
-  .roster .run span::after{content:"·";color:var(--ox);margin-left:30px;}
+  /* roster */
+  .roster{background:var(--ink);color:var(--paper);overflow:hidden;padding:18px 0;}
+  .roster .run{display:flex;white-space:nowrap;animation:ticker 44s linear infinite;font-family:"Fraunces",serif;font-weight:600;font-size:clamp(20px,3vw,30px);}
+  .roster .run span{padding:0 26px;}
+  .roster .run span::after{content:"·";color:var(--ox);margin-left:26px;}
   .roster .run em{font-style:italic;color:var(--gold);font-weight:400;}
+  @keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* ---- pipeline ---- */
-  .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:2px solid var(--ink);}
-  @media(max-width:760px){.flow{grid-template-columns:1fr 1fr;}}
-  .flow .step{padding:22px 18px;border-right:2px solid var(--ink);position:relative;}
-  .flow .step:last-child{border-right:0;}
-  @media(max-width:760px){.flow .step{border-right:2px solid var(--ink);border-bottom:2px solid var(--ink);}}
-  .flow .step .n{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--ox);}
-  .flow .step h5{font-family:"Fraunces",serif;font-weight:700;font-size:20px;margin:8px 0 6px;}
-  .flow .step p{font-size:15px;margin:0;color:var(--ink-soft);line-height:1.4;}
-  .flow .step .tool{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--field);margin-top:10px;display:block;}
+  footer{padding:40px 0 56px;border-top:3px double var(--ink);}
+  .foot-grid{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+  footer .big{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,3vw,30px);}
+  footer .big a{color:var(--ox);text-decoration:none;border-bottom:2px solid var(--ox);}
+  footer .meta{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;text-align:right;line-height:1.9;color:var(--ink-soft);}
+  footer .meta a{color:var(--ox);text-decoration:none;}
 
-  /* ---- footer ---- */
-  footer{border-top:3px double var(--ink);padding:40px 0 64px;}
-  .foot-grid{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;align-items:flex-end;}
-  footer .big{font-family:"Fraunces",serif;font-weight:900;font-size:clamp(30px,6vw,64px);line-height:.9;text-transform:uppercase;letter-spacing:-.02em;}
-  footer .big em{font-style:italic;color:var(--ox);font-weight:500;}
-  footer .col-r{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;text-align:right;line-height:1.9;color:var(--ink-soft);}
-  footer .col-r a{color:var(--ox);text-decoration:none;border-bottom:1px solid var(--rule);}
-  footer .col-r a:hover{background:var(--ox);color:var(--paper);}
-
-  .reveal{opacity:0;transform:translateY(22px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;}
+  .reveal{opacity:0;transform:translateY(20px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards;}
   @keyframes rise{to{opacity:1;transform:none;}}
-  @media(prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none;}.wire .scroll,.roster .run{animation:none;}}
+  @media(prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none;}.roster .run{animation:none;}}
 </style>
 </head>
 <body>
 
-<div class="wire" aria-hidden="true">
-  <div class="scroll">
-    <span><b>ON AIR</b> · the commentary box that never closes</span><span>text any iconic moment, name any legend</span><span><b>2011 WC FINAL</b> · dhoni finishes off in style</span><span>2019 super over · by the barest of all margins</span><span><b>2016 WT20</b> · remember the name</span><span>warne, ball of the century</span>
-    <span><b>ON AIR</b> · the commentary box that never closes</span><span>text any iconic moment, name any legend</span><span><b>2011 WC FINAL</b> · dhoni finishes off in style</span><span>2019 super over · by the barest of all margins</span><span><b>2016 WT20</b> · remember the name</span><span>warne, ball of the century</span>
-  </div>
-</div>
-
 <div class="wrap">
-  <header class="mast">
-    <div class="mast-row">
-      <div class="kicker">The Commentary Almanack — Voices, Reincarnated</div>
-      <div class="edition">No. 06 / 2026<br/>Agentic AI · San Francisco<br/>Price: one text message</div>
-    </div>
+  <header class="hero">
+    <div class="onair"><span class="dot"></span> Live over iMessage</div>
     <h1 class="title">Re<em>incarn</em>ation</h1>
-    <p class="dek">Hear an iconic sports moment called in <b>a different legend's voice</b> — over iMessage. You name the moment and the commentator. We remember who really called it, then re-imagine the moment as <i>they</i> would have.</p>
-  </header>
-
-  <div class="hero-grid">
-    <div class="lede">
-      <div class="onair"><span class="dot"></span> Live — reply &amp; it learns your corrections</div>
-      <p class="first">Ravi Shastri called Dhoni's six in 2011. But what if <b>Harsha Bhogle</b> had the mic? Or the gloriously unhinged <b>Danny Morrison</b>? Text the number, name a voice, and the same six lands two completely different ways.</p>
-      <p>Every legend is a living set of style notes. Tell it <i>"he should get louder on a six"</i> and the memory rewrites itself — the next call comes back better. Fifteen voices, decades of iconic moments, one phone number.</p>
-    </div>
-
-    <aside class="ticket reveal" style="animation-delay:.15s">
-      <div class="lbl">▸ Tune in · iMessage</div>
-      <h3>Text a moment. Get the call.</h3>
+    <p class="pitch">Text an iconic cricket moment. Hear it called in <span class="ox">a different legend's voice.</span></p>
+    <p class="sub">We know who really called it. You pick who should have.</p>
+    <div class="cta">
       <a class="num" href="sms:+14156035536">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.6 3 8.38 8.38 0 0 1 21 11.5z"/></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8A8.5 8.5 0 0 1 12.6 3 8.38 8.38 0 0 1 21 11.5z"/></svg>
         415&#8202;·&#8202;603&#8202;·&#8202;5536
       </a>
-      <p class="hint">Tap to open Messages. Try:</p>
-      <p class="sample">“what would Harsha have done at the 2011 WC final?”</p>
-    </aside>
-  </div>
-
-  <!-- FEATURE: one moment, two voices -->
-  <section id="moment">
-    <div class="shead">
-      <span class="no">§ 01</span>
-      <h2>One Moment, Two Voices</h2>
-      <span class="meta">Wankhede · 02 Apr 2011</span>
+      <div class="how">Tap to text. Try:<br/><b>“Harsha Bhogle, 2011 WC final”</b></div>
     </div>
+  </header>
+
+  <section>
+    <div class="shead">▸ The same six, two ways</div>
     <div class="feature reveal">
       <div class="moment">
-        <div class="yr">2011 · ICC World Cup Final · India v Sri Lanka</div>
+        <div class="yr">2011 · WORLD CUP FINAL · WANKHEDE</div>
         <h3>MS Dhoni's winning six</h3>
-        <div class="og"><b>As it was called — Ravi Shastri</b>“Dhoni finishes off in style! A magnificent strike into the crowd! India lift the World Cup after 28 years!”</div>
+        <div class="og"><b>As Ravi Shastri called it</b>“Dhoni finishes off in style! A magnificent strike into the crowd! India lift the World Cup after 28 years!”</div>
       </div>
-      <div class="col">
-        <div class="voicetag">Reimagined · the storyteller</div>
-        <p class="vname">Harsha Bhogle</p>
-        <p class="script">And that is the moment — a man who has carried the weight of a billion expectations with such extraordinary calm, now lifts it all away with one clean, majestic blow over long-on. Twenty-eight years of waiting, and it ends here in Mumbai, in Sachin Tendulkar's city. India are World Champions, and the sheer beauty of this moment will take a long, long time to fully understand.”</p>
+      <div class="twocol">
+        <div class="col">
+          <div class="voicetag">Reimagined · Harsha Bhogle</div>
+          <p class="script">“…a man who has carried the weight of a billion expectations with such calm, now lifts it all away with one majestic blow over long-on. It ends here in Mumbai, in Sachin's city. India are World Champions.”</p>
+        </div>
+        <div class="col">
+          <div class="voicetag alt">Reimagined · Danny Morrison</div>
+          <p class="script">“THAT IS GONE INTO THE MUMBAI NIGHT, BABY! Captain Cool has deposited Kulasekara into the STRATOSPHERE and India are WORLD CHAMPIONS — the Wankhede has LOST ITS MIND!”</p>
+        </div>
       </div>
-      <div class="col">
-        <div class="voicetag alt">Reimagined · the live wire</div>
-        <p class="vname">Danny Morrison</p>
-        <p class="script">THAT IS GONE! THAT IS ABSOLUTELY GONE INTO THE MUMBAI NIGHT, BABY! Mahi, the Captain Cool, the FINISHER — he has just deposited Kulasekara into the STRATOSPHERE and India are WORLD CHAMPIONS! Twenty-eight years, Sachin's backyard, and THIS is how you write the greatest story ever told — the Wankhede has LOST ITS MIND!”</p>
-      </div>
+      <div class="foot">Correct it — <b>“louder on a six”</b> — and the voice remembers. The next call comes back better.</div>
     </div>
-  </section>
-
-  <!-- THE WIRE: more reimagined clips -->
-  <section id="wire" style="padding-top:8px;">
-    <div class="shead">
-      <span class="no">§ 02</span>
-      <h2>The Reimagined Wire</h2>
-      <span class="meta">Filed from the box · real generated calls</span>
-    </div>
-    <div class="clips" id="clipgrid"></div>
   </section>
 </div>
 
-<!-- ROSTER -->
-<div class="roster" aria-label="Available commentators">
-  <div class="run" id="roster1"></div>
-</div>
-
-<div class="wrap">
-  <!-- PIPELINE -->
-  <section id="how">
-    <div class="shead">
-      <span class="no">§ 03</span>
-      <h2>How the Call Travels</h2>
-      <span class="meta">four platforms, one reply</span>
-    </div>
-    <div class="flow reveal">
-      <div class="step"><span class="n">01</span><h5>You text</h5><p>A moment + a voice arrives over iMessage.</p><span class="tool">Photon · spectrum-ts</span></div>
-      <div class="step"><span class="n">02</span><h5>It remembers</h5><p>Pulls the moment and the original call from the database.</p><span class="tool">Butterbase · DB</span></div>
-      <div class="step"><span class="n">03</span><h5>Reads the voice</h5><p>Loads the target legend's evolving style notes.</p><span class="tool">XTrace · memory</span></div>
-      <div class="step"><span class="n">04</span><h5>Reimagines</h5><p>Two-step pipeline rewrites the moment in that voice.</p><span class="tool">RocketRide → Butterbase AI</span></div>
-      <div class="step"><span class="n">05</span><h5>Texts back</h5><p>The new call lands in the thread. Correct it; it learns.</p><span class="tool">Photon · iMessage</span></div>
-    </div>
-  </section>
+<div class="roster" aria-label="Available voices">
+  <div class="run" id="roster"></div>
 </div>
 
 <footer>
   <div class="wrap foot-grid">
-    <div class="big">Name a<br/><em>voice.</em></div>
-    <div class="col-r">
-      <div>Reincarnation</div>
-      <div>Built for the Agentic AI SF Hackathon</div>
-      <div>Butterbase · XTrace · RocketRide · Photon</div>
-      <div style="margin-top:10px;"><a href="sms:+14156035536">Text 415·603·5536</a></div>
+    <div class="big">Name a voice. <a href="sms:+14156035536">Text 415·603·5536</a></div>
+    <div class="meta">
+      <div>Reincarnation · Agentic AI SF Hackathon</div>
       <div><a href="https://github.com/Ekansh27/reincarnation" target="_blank" rel="noopener">github.com/Ekansh27/reincarnation</a></div>
     </div>
   </div>
 </footer>
 
 <script>
-  const clips = [
-    {yr:"2016 · World T20 Final", title:"Carlos Brathwaite's four sixes", as:"Ian Bishop", body:"Six! Six! Six! And six again — Carlos Brathwaite has torn the heart right out of England with four of the most extraordinary blows this game has ever witnessed! West Indies are champions of the world. Remember the name."},
-    {yr:"1993 · Ashes, Old Trafford", title:"Warne's Ball of the Century", as:"Richie Benaud", body:"He's bowled him. Outside leg, and it's hit the top of off stump. Gatting is looking at the pitch as though it owes him an explanation."},
-    {yr:"1983 · World Cup Final, Lord's", title:"Kapil Dev's running catch", as:"Ian Bishop", body:"He has caught it! Kapil Dev, running, running, running — and he holds on at midwicket! You do not dismiss Vivian Richards like that without believing something extraordinary is coming your way today."},
-    {yr:"2024 · T20 World Cup Final", title:"India, champions again", as:"Harsha Bhogle", body:"And India are World Champions once again — unbeaten through the entire tournament, carrying the weight of a billion dreams. South Africa pushed them to the very edge, but India held their nerve in that cauldron only a final can produce."},
-    {yr:"2010 · Gwalior", title:"Tendulkar's ODI double hundred", as:"Michael Holding", body:"And there it is — the first double century in the history of One Day International cricket, and who else but the little master. He has now broken a record nobody even imagined existed."},
-    {yr:"2012 · Asia Cup, Mirpur", title:"Dhoni's helicopter six", as:"Danny Morrison", body:"OH MY GOODNESS GRACIOUS ME, CAPTAIN COOL HAS GONE ABSOLUTELY NUCLEAR WITH THE HELICOPTER OF DOOM! That is not a cricket shot — that is AVIATION! BOOM, the Helicopter has LANDED for SIX!"}
-  ];
-  const grid = document.getElementById('clipgrid');
-  clips.forEach((c,i)=>{
-    const el = document.createElement('article');
-    el.className='clip reveal';
-    el.style.animationDelay=(0.05*i)+'s';
-    el.innerHTML = `<div class="top"><span class="yr">${c.yr}</span><span>reimagined</span></div>
-      <h4>${c.title}</h4>
-      <div class="as">in the voice of · <b>${c.as}</b></div>
-      <div class="body">“${c.body}”</div>`;
-    grid.appendChild(el);
-  });
-
   const roster = ["Ravi Shastri","Harsha Bhogle","Bill Lawry","Ian Bishop","Richie Benaud","Tony Greig","Ian Smith","Nasser Hussain","Michael Holding","David 'Bumble' Lloyd","Sunil Gavaskar","Danny Morrison","Mark Nicholas","Ramiz Raja","Sourav Ganguly"];
-  const run = document.getElementById('roster1');
-  const seq = [...roster, ...roster];
-  run.innerHTML = seq.map((n,i)=> i%3===1 ? `<span><em>${n}</em></span>` : `<span>${n}</span>`).join('');
+  document.getElementById('roster').innerHTML =
+    [...roster,...roster].map((n,i)=> i%3===1 ? `<span><em>${n}</em></span>` : `<span>${n}</span>`).join('');
 </script>
 </body>
 </html>

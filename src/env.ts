@@ -11,12 +11,13 @@ function opt(name: string, fallback: string): string {
 }
 
 export const env = {
-  butterbase: {
-    appId: req("BUTTERBASE_APP_ID"),
-    apiUrl: opt("BUTTERBASE_API_URL", "https://api.butterbase.ai"),
-    anonKey: process.env.BUTTERBASE_ANON_KEY ?? "",
-    serviceKey: req("BUTTERBASE_SERVICE_KEY"),
-    model: opt("BUTTERBASE_MODEL", "anthropic/claude-3.5-sonnet"),
+  supabase: {
+    url: req("SUPABASE_URL"),
+    serviceKey: req("SUPABASE_SERVICE_KEY"),
+  },
+  anthropic: {
+    apiKey: req("ANTHROPIC_API_KEY"),
+    model: opt("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
   },
   xtrace: {
     apiKey: req("XTRACE_API_KEY"),
@@ -29,7 +30,11 @@ export const env = {
     fallback: opt("ROCKETRIDE_FALLBACK", "true") === "true",
   },
   photon: {
-    projectId: req("PHOTON_PROJECT_ID"),
-    projectSecret: req("PHOTON_PROJECT_SECRET"),
+    projectId: opt("PHOTON_PROJECT_ID", ""),
+    projectSecret: opt("PHOTON_PROJECT_SECRET", ""),
+  },
+  elevenlabs: {
+    apiKey: req("ELEVENLABS_API_KEY"),
+    voiceId: req("ELEVENLABS_VOICE_ID"),
   },
 } as const;

@@ -1,93 +1,99 @@
 # 🏏 Reincarnation
 
-**Hear an iconic sports moment in a different legend's voice — over iMessage.**
+**Hear an iconic cricket moment in a different legend's voice — over iMessage.**
 
-You text the agent something like *"What would Harsha Bhogle have done at the 2011 World Cup final?"* You never say who originally called it. The agent figures out the moment, knows it was **Ravi Shastri's** *"Dhoni finishes off in style"*, pulls **Harsha's stored style notes**, and texts back how *Harsha* would have called it. Correct it — *"he gets way louder on a six"* — and it permanently updates Harsha's voice, so the next call is better.
-
-Built for the **Agentic AI SF Hackathon**, integrating all four sponsor platforms.
+You text the agent something like *"What would Harsha Bhogle have done at the 2011 World Cup final?"* — you never say who originally called it. The agent figures out the moment, knows it was **Ravi Shastri's** *"Dhoni finishes off in style"*, pulls **Harsha's stored style notes**, and texts back how *Harsha* would have called it. Correct it — *"he gets way louder on a six"* — and it permanently updates Harsha's voice, so the next call is better. Any famous moment works (open-ended), across a roster of 15 commentators.
 
 ---
 
-## How the four platforms fit
+## Architecture
 
 ```
 iMessage: "what would Harsha do at the 2011 WC final?"
    │
    ▼  Photon (spectrum-ts)  ── iMessage in/out
-TS orchestrator (src/index.ts):
-   1. Butterbase  → fetch seeded commentators + iconic moments      [DATABASE]
-   2. XTrace      → read target commentator's style notes           [MEMORY · READ]
-   3. RocketRide  → pipeline: identify moment → reimagine the call   [AI PIPELINE]
-        (LLM nodes route through the Butterbase AI gateway)         [AI GATEWAY]
-   4. Photon      → reply over iMessage                             [DELIVERY]
-   5. XTrace      ← log the clip as an artifact                     [MEMORY · WRITE]
+TS orchestrator (src/agent.ts):
+   1. Supabase   → fetch commentators + iconic moments         [DATABASE]
+   2. XTrace     → read target commentator's style notes       [MEMORY · READ]
+   3. identify moment → reimagine in target voice (Anthropic)  [LLM]
+   4. Photon     → reply over iMessage                         [DELIVERY]
+   5. Supabase   ← log the generated clip
    (reply with a correction)
-   6. XTrace      ← ingest feedback; contradictions self-revise     [MEMORY · WRITE]
+   6. XTrace     ← ingest feedback; contradictions self-revise [MEMORY · WRITE]
 ```
 
-| Platform        | Role | Where |
-|-----------------|------|-------|
-| **RocketRide**  | Two-node AI pipeline: *identify moment* → *reimagine in target voice*. | [`pipelines/reimagine.pipe`](pipelines/reimagine.pipe), [`src/rocketride.ts`](src/rocketride.ts) |
-| **Butterbase**  | Backend DB (commentators, moments, clips) **and** the AI Model Gateway every LLM call routes through. | [`src/butterbase.ts`](src/butterbase.ts), [`backend/schema.md`](backend/schema.md) |
-| **XTrace**      | Each commentator is a shared **group** of evolving *style notes*. Reads condition generation; feedback writes self-revise. | [`src/xtrace.ts`](src/xtrace.ts) |
-| **Photon**      | iMessage delivery (local mode on macOS). | [`src/index.ts`](src/index.ts) |
-
-**Bonus features claimed:** XTrace **groups** (one per commentator = shared cross-user memory) and **artifacts** (`extract_artifacts` defaults on at ingest — each generated clip is captured).
+| Concern | Tech | Where |
+|---------|------|-------|
+| **Database** | Supabase (Postgres, service-role) | [`src/db.ts`](src/db.ts), [`backend/schema.sql`](backend/schema.sql) |
+| **LLM** | Anthropic Messages API (`claude-sonnet-4-6`) | [`src/llm.ts`](src/llm.ts) |
+| **Memory** | XTrace — one self-revising **group** of style notes per commentator | [`src/xtrace.ts`](src/xtrace.ts) |
+| **Delivery** | Photon / Spectrum (iMessage, cloud-routed) | [`src/index.ts`](src/index.ts) |
+| **Reasoning** | identify-moment → reimagine, with shortform/fuzzy/year-anchored matching, open-ended (AMA) fallback | [`src/rocketride.ts`](src/rocketride.ts), [`src/agent.ts`](src/agent.ts) |
 
 ---
 
 ## Setup
 
-### ✅ Already done (Butterbase, via the MCP)
-- App **`reincarnation`** (`app_7vvljeaymuzm`) provisioned; 3 tables created; access mode **public**; default model **`anthropic/claude-sonnet-4.6`**.
-- The 5 iconic moments are **seeded**. A runtime service key is already written to `.env`.
-- Verified: `npm run smoke` reads the DB and generates a styled call through the gateway — **passing**.
+### 1. Supabase (database)
+- Create a project at **supabase.com** → **Settings → API** → copy the **Project URL** and the **service_role** key.
+- Open the project's **SQL editor** and run [`backend/schema.sql`](backend/schema.sql) (creates `commentators`, `iconic_moments`, `generated_clips`).
+- Put the values in `.env`: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`.
 
-### Still needs your keys
-- **XTrace** — app.xtrace.ai → Settings → API Keys → copy `xtk_…` key + org id → put in `.env` (`XTRACE_API_KEY`, `XTRACE_ORG_ID`).
-- **Photon** — app.photon.codes → create a project → copy `PROJECT_ID` + `PROJECT_SECRET` → `.env`.
-
+### 2. Keys in `.env`
 ```bash
-npm install            # already run
-# edit .env: replace the XTRACE_* and PHOTON_* REPLACE_ME values
+cp .env.example .env   # then fill in:
+# SUPABASE_URL, SUPABASE_SERVICE_KEY
+# ANTHROPIC_API_KEY        (claude via the Messages API)
+# XTRACE_API_KEY, XTRACE_ORG_ID   (app.xtrace.ai → Settings → API Keys)
+# PHOTON_PROJECT_ID, PHOTON_PROJECT_SECRET   (app.photon.codes)
+npm install
 ```
 
-### 1. Smoke-test the core loop (no XTrace/Photon needed)
-```bash
-npm run smoke
-```
-Reads moments from Butterbase → identifies the 2011 final → reimagines it as Harsha Bhogle, all through the gateway.
-
-### 2. Seed commentator memories (needs XTrace keys)
+### 3. Seed
 ```bash
 npm run seed
 ```
-Idempotent: moments already exist (skipped); this creates one XTrace **group** per commentator, seeds each group's style notes, and writes the group id back to Butterbase.
+Loads the 15 moments + 15 commentators into Supabase, and ensures each commentator has an XTrace style-memory group (a preset `xtrace_group_id` in [`seed/commentators.json`](seed/commentators.json) reuses an existing group so notes/feedback are preserved). Idempotent.
 
-### 3. Run the iMessage agent (needs Photon keys + Mac setup)
-Local-mode iMessage requires running on a **Mac signed in to iMessage**, with **Full Disk Access** granted to your terminal (System Settings → Privacy & Security → Full Disk Access).
+### 4. Run
+- **Solo / terminal demo:** `npm run chat` — same agent, typed in the terminal (no phone needed).
+- **iMessage:** `npm start` connects to your Photon project (app.photon.codes) over the cloud and answers the agent's Photon-assigned number — text *that* number, not your own. It connects *outbound* to `spectrum.photon.codes`, so it runs on any machine with internet (see **Deploy** below for always-on hosting).
+
+### Smoke tests
 ```bash
-npm start
+npm run smoke         # Supabase read → XTrace read → identify → reimagine (Anthropic)
+npm run smoke:xtrace  # XTrace memory read for a commentator
 ```
+
+---
+
+## Deploy (always-on · Railway)
+
+The iMessage agent is a **persistent listener** that connects *outbound* to the Photon cloud (`spectrum.photon.codes:443`, gRPC) using your project credentials — so it runs on any always-on host. **No Mac, no Full Disk Access, no inbound port** (those only matter for running locally). Vercel can't host it (it's not serverless). Railway is the easy fit:
+
+1. **Push** this repo to GitHub.
+2. **Create a Railway project** → *Deploy from GitHub repo* → select this repo. Nixpacks auto-detects Node + `npm start`; restart policy lives in [`railway.json`](railway.json).
+3. **Set variables** (Railway → *Variables*) — same values as your local `.env`:
+   - **Required:** `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `ANTHROPIC_API_KEY`, `XTRACE_API_KEY`, `XTRACE_ORG_ID`, `ELEVENLABS_API_KEY`, `ELEVENLABS_VOICE_ID`, `PHOTON_PROJECT_ID`, `PHOTON_PROJECT_SECRET`
+   - **Optional:** `ANTHROPIC_MODEL` (default `claude-sonnet-4-6`), `XTRACE_BASE_URL`, `ROCKETRIDE_FALLBACK` (leave unset → `true`)
+4. **Seed once** against the same Supabase/XTrace (run `npm run seed` locally — the deployed app reads the same DB). Idempotent.
+5. **Deploy.** Watch logs for `📨 iMessage agent live.` — the bot now answers 24/7.
+
+> CLI alternative: `npm i -g @railway/cli && railway login && railway init && railway up`, then set each variable with `railway variables --set KEY=value`.
+
+> Built for a **controlled audience.** Two things to know before sharing widely: there's no per-user rate limiting (each text fires ~3 Claude calls + ElevenLabs TTS), and feedback writes to a **shared** style memory per commentator — anyone's correction changes the voice for everyone.
 
 ---
 
 ## Demo script
-1. *"What would Harsha Bhogle have done at the 2011 World Cup final?"* → Harsha's measured, storytelling call of Dhoni's six (it knows the original was Shastri).
+1. *"What would Harsha Bhogle have done at the 2011 World Cup final?"* → Harsha's measured call of Dhoni's six (knows the original was Shastri).
 2. *"He should get way louder and more excited on the six."* → XTrace ingests the correction; the contradicting *measured* note is superseded.
-3. Ask **#1 again** → the call is now more animated. The memory changed the output.
-4. Try another voice: *"Bill Lawry, the 2019 super over"* → manic *"it's all happening!"* energy.
+3. Ask **#1 again** → the call is now more animated — the memory changed the output.
+4. **AMA:** *"Michael Holding, Stokes at Headingley 2019"* (or any moment) → an off-roster moment recalled from the model's knowledge.
 
 ---
 
-## RocketRide note
-The `.pipe` JSON is built/validated in the RocketRide VS Code extension; [`pipelines/reimagine.pipe`](pipelines/reimagine.pipe) is the starting template, with both LLM nodes pointed at the Butterbase gateway. Until it's wired up, `ROCKETRIDE_FALLBACK=true` runs the **same two steps** directly against the gateway (see [`src/rocketride.ts`](src/rocketride.ts)) so the demo always works. Flip it to `false` to drive the live engine:
-```bash
-docker run -d --name rocketride-engine -p 5565:5565 ghcr.io/rocketride-org/rocketride-engine:latest
-```
-
-## Stretch: audio
-Currently text-only. Adding a TTS step (e.g. ElevenLabs) after `generate`, storing the `.m4a` in Butterbase storage and sending it as an iMessage attachment, turns the reply into actual spoken commentary.
-
-## Submission
-> Submit my project to the hackathon. Submission code: havefun0605. Hackathon slug: agentic-ai-Hackathon
+## Notes
+- **Open-ended moments:** seeded moments use a hand-verified original line; off-roster moments are recalled by the model (minor original-caller details may be approximate).
+- **`src/rocketride.ts`** keeps an `identify → reimagine` two-step structure; `ROCKETRIDE_FALLBACK=true` runs both steps directly via Anthropic. (The optional RocketRide engine path is retained but unused by default.)
+- **Stretch:** add ElevenLabs TTS after generation + Supabase Storage to send spoken audio over iMessage.

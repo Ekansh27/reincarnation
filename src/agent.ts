@@ -1,4 +1,4 @@
-import { fetchCommentators, fetchMoments, logClip, type Commentator, type IconicMoment } from "./butterbase.js";
+import { fetchCommentators, fetchMoments, logClip, type Commentator, type IconicMoment } from "./db.js";
 import { readStyle, recordFeedback } from "./xtrace.js";
 import { reimagine, classifyIntent, NeedMomentError } from "./rocketride.js";
 
@@ -11,9 +11,15 @@ import { reimagine, classifyIntent, NeedMomentError } from "./rocketride.js";
 
 export type Routable = Commentator & { firstName: string; tokens: string[] };
 
+/** A reply for the channel to deliver: display `text`, plus optional `speech` to voice (commentary only). */
+export interface AgentReply {
+  text: string; // display text — prosody tags stripped
+  speech?: string; // prosody-marked scriptText for TTS; set only for commentary
+}
+
 export interface Agent {
   commentators: Routable[];
-  handle: (senderId: string, text: string) => Promise<string>;
+  handle: (senderId: string, text: string) => Promise<AgentReply>;
   helpText: () => string;
 }
 
@@ -23,6 +29,9 @@ const nameTokens = (name: string): string[] =>
     .replace(/[^a-z0-9 ]/g, " ")
     .split(/\s+/)
     .filter((w) => w.length >= 3);
+
+/** Drop ElevenLabs `<break time="Xs"/>` tags so the spoken markup never shows in the text bubble. */
+const stripProsody = (s: string): string => s.replace(/<break\b[^>]*\/?>/gi, "").replace(/[ \t]{2,}/g, " ").trim();
 
 export async function createAgent(): Promise<Agent> {
   const [rawCommentators, moments] = await Promise.all([fetchCommentators(), fetchMoments()]);
@@ -84,8 +93,8 @@ export async function createAgent(): Promise<Agent> {
     `Voices: ${names}\n` +
     "Reply without naming a commentator to refine the last one's voice (e.g. \"he gets way louder on a six\").";
 
-  const handleRequest = async (text: string, target: Routable): Promise<string> => {
-    if (!target.xtrace_group_id) return `${target.name} isn't set up yet — run \`npm run seed\` first.`;
+  const handleRequest = async (text: string, target: Routable): Promise<AgentReply> => {
+    if (!target.xtrace_group_id) return { text: `${target.name} isn't set up yet — run \`npm run seed\` first.` };
 
     const style = await readStyle(target.xtrace_group_id, target.name);
     let result;
@@ -93,7 +102,9 @@ export async function createAgent(): Promise<Agent> {
       result = await reimagine({ query: text, targetCommentatorName: target.name, styleContext: style.context, moments });
     } catch (err) {
       if (err instanceof NeedMomentError) {
-        return `Which moment should ${target.firstName} call? Name one — any famous cricket moment works (e.g. "the 2011 WC final" or "Stokes at Headingley 2019").`;
+        return {
+          text: `Which moment should ${target.firstName} call? Name one — any famous cricket moment works (e.g. "the 2011 WC final" or "Stokes at Headingley 2019").`,
+        };
       }
       throw err;
     }
@@ -108,10 +119,14 @@ export async function createAgent(): Promise<Agent> {
 
     const origin = result.originalCommentator ? ` (originally ${result.originalCommentator})` : "";
     const header = result.matchedTitle ? `${target.name} on ${result.matchedTitle}${origin}` : `${target.name}`;
-    return `🎙️ ${header}:\n\n${result.scriptText}\n\n↩️ Not quite? Reply with a tweak and I'll remember it for ${target.firstName}.`;
+    const display = stripProsody(result.scriptText);
+    return {
+      text: `🎙️ ${header}:\n\n${display}\n\n↩️ Not quite? Reply with a tweak and I'll remember it for ${target.firstName}.`,
+      speech: result.scriptText, // keep <break> tags — ElevenLabs uses them for pacing
+    };
   };
 
-  const handle = async (senderId: string, text: string): Promise<string> => {
+  const handle = async (senderId: string, text: string): Promise<AgentReply> => {
     const target = matchCommentator(text);
     if (target) {
       lastCommentator.set(senderId, target);
@@ -121,19 +136,20 @@ export async function createAgent(): Promise<Agent> {
     // No known commentator named — is this a request for a voice we don't have, or feedback?
     const intent = await classifyIntent(text);
     if (intent === "request") {
-      return (
-        "I don't have that commentator in my roster yet 🎙️\n\n" +
-        `Voices I can do: ${names}\n\n` +
-        'Name one of them + a moment (e.g. "Harsha Bhogle, the 2011 WC final").'
-      );
+      return {
+        text:
+          "I don't have that commentator in my roster yet 🎙️\n\n" +
+          `Voices I can do: ${names}\n\n` +
+          'Name one of them + a moment (e.g. "Harsha Bhogle, the 2011 WC final").',
+      };
     }
 
     const c = lastCommentator.get(senderId);
     if (c?.xtrace_group_id) {
       const summary = await recordFeedback(c.xtrace_group_id, c.name, senderId, text);
-      return `${summary}\n\nAsk me to call a moment as ${c.name} again to hear the difference.`;
+      return { text: `${summary}\n\nAsk me to call a moment as ${c.name} again to hear the difference.` };
     }
-    return helpText();
+    return { text: helpText() };
   };
 
   return { commentators, handle, helpText };

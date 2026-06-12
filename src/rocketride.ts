@@ -1,5 +1,6 @@
 import { env } from "./env.js";
-import { chat, type IconicMoment } from "./butterbase.js";
+import { chat } from "./llm.js";
+import type { IconicMoment } from "./db.js";
 
 /**
  * RocketRide = the AI pipeline. The `reimagine` pipeline has two LLM nodes:
@@ -7,7 +8,7 @@ import { chat, type IconicMoment } from "./butterbase.js";
  *      recover its ORIGINAL commentator + line (the user never names them).
  *   2. generate — rewrite that moment in the TARGET commentator's voice using
  *      the style notes read from XTrace.
- * Both nodes route through the Butterbase AI gateway.
+ * Both steps call the Anthropic API directly (via src/llm.ts).
  *
  * ROCKETRIDE_FALLBACK=true runs the same two steps directly against the gateway
  * (so the demo always works); flip it false once the .pipe is live in VS Code.
@@ -71,14 +72,40 @@ async function reimagineDirect(input: ReimagineInput): Promise<ReimagineResult> 
   // Anchored fast-path: a seeded moment → use its verified original line + context.
   const seeded = await identifyMoment(input.query, input.moments);
   if (seeded) {
-    const scriptText = await generateCall(seeded, input.targetCommentatorName, input.styleContext);
+    const raw = await generateCall(seeded, input.targetCommentatorName, input.styleContext);
+    const scriptText = await addProsody(raw, input.targetCommentatorName);
     return { scriptText, matchedTitle: seeded.title, originalCommentator: seeded.original_commentator };
   }
 
   // Open-ended (AMA): let the model recall any moment from its own cricket knowledge.
   const open = await generateOpen(input.query, input.targetCommentatorName, input.styleContext);
   if (open.needMoment) throw new NeedMomentError();
-  return { scriptText: open.commentary, matchedTitle: open.moment, originalCommentator: open.original_commentator };
+  const scriptText = await addProsody(open.commentary, input.targetCommentatorName);
+  return { scriptText, matchedTitle: open.moment, originalCommentator: open.original_commentator };
+}
+
+/**
+ * Post-processing step: insert ElevenLabs break tags at natural pause points
+ * to reflect the commentator's actual vocal delivery.
+ */
+async function addProsody(text: string, commentatorName: string): Promise<string> {
+  return chat(
+    [
+      {
+        role: "system",
+        content:
+          `You are a speech director adding natural pauses to cricket commentary for ${commentatorName}.\n` +
+          "Insert ElevenLabs-compatible break tags (<break time=\"Xs\"/>) at natural pause points:\n" +
+          "- Before a dramatic reveal or climax word/phrase: 0.6–0.8s break\n" +
+          "- Between sentences: 0.3–0.4s break\n" +
+          "- Mid-sentence pause for emphasis: 0.2–0.3s break\n\n" +
+          `${commentatorName} is measured and deliberate — pauses let insight land, not theatrical effect.\n` +
+          "Return ONLY the marked-up text. Do not add, remove, or change any words.",
+      },
+      { role: "user", content: text },
+    ],
+    { model: "claude-haiku-4-5-20251001", temperature: 0.2, maxTokens: 600 },
+  );
 }
 
 interface OpenResult {
@@ -207,7 +234,7 @@ function uniqueTop(cands: IconicMoment[], q: Set<string>, min: number): IconicMo
 /** Step 1 — match free-text to a seeded moment. Returns null if nothing fits. */
 export async function identifyMoment(query: string, moments: IconicMoment[]): Promise<IconicMoment | null> {
   const catalogue = moments
-    .map((m) => `slug=${m.slug} | ${m.title} (${m.year}) | originally called by ${m.original_commentator}`)
+    .map((m) => `slug=${m.slug} | ${m.title} (${m.year}) | ${m.context}`)
     .join("\n");
 
   const raw = await chat(

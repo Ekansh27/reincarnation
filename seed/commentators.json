@@ -1,6 +1,7 @@
 [
   {
     "slug": "ravi-shastri",
+    "xtrace_group_id": "grp_e1d0063a3d1888f4e44a3bf36e2c7e99",
     "name": "Ravi Shastri",
     "sport": "cricket",
     "notes": [
@@ -13,6 +14,7 @@
   },
   {
     "slug": "harsha-bhogle",
+    "xtrace_group_id": "grp_3e86f5d714b65c720b6105caf0e77562",
     "name": "Harsha Bhogle",
     "sport": "cricket",
     "notes": [
@@ -25,6 +27,7 @@
   },
   {
     "slug": "bill-lawry",
+    "xtrace_group_id": "grp_cc83d553090fe11c1d4dd5220e3d637e",
     "name": "Bill Lawry",
     "sport": "cricket",
     "notes": [
@@ -37,6 +40,7 @@
   },
   {
     "slug": "ian-bishop",
+    "xtrace_group_id": "grp_edee3fdf15e9543c6f6216fd4704aa1e",
     "name": "Ian Bishop",
     "sport": "cricket",
     "notes": [
@@ -49,6 +53,7 @@
   },
   {
     "slug": "richie-benaud",
+    "xtrace_group_id": "grp_665319ef095b59a357dbc2c49f6ea482",
     "name": "Richie Benaud",
     "sport": "cricket",
     "notes": [
@@ -61,6 +66,7 @@
   },
   {
     "slug": "tony-greig",
+    "xtrace_group_id": "grp_8407001cf203ddb9a26be6fd2f0b08bb",
     "name": "Tony Greig",
     "sport": "cricket",
     "notes": [
@@ -73,6 +79,7 @@
   },
   {
     "slug": "ian-smith",
+    "xtrace_group_id": "grp_70f8fec05e57b33182e12940ca506a86",
     "name": "Ian Smith",
     "sport": "cricket",
     "notes": [
@@ -85,6 +92,7 @@
   },
   {
     "slug": "nasser-hussain",
+    "xtrace_group_id": "grp_2421ba85abb8d92ee6ff33a21ec60e60",
     "name": "Nasser Hussain",
     "sport": "cricket",
     "notes": [
@@ -97,6 +105,7 @@
   },
   {
     "slug": "michael-holding",
+    "xtrace_group_id": "grp_1e482e7decda52314a67920e9f9935f9",
     "name": "Michael Holding",
     "sport": "cricket",
     "notes": [
@@ -109,6 +118,7 @@
   },
   {
     "slug": "david-lloyd",
+    "xtrace_group_id": "grp_c8d919115aa30b64b79ed8af857a53cf",
     "name": "David 'Bumble' Lloyd",
     "sport": "cricket",
     "notes": [
@@ -121,6 +131,7 @@
   },
   {
     "slug": "sunil-gavaskar",
+    "xtrace_group_id": "grp_97cbffa07c95d7a3ece0119311375b48",
     "name": "Sunil Gavaskar",
     "sport": "cricket",
     "notes": [
@@ -133,6 +144,7 @@
   },
   {
     "slug": "danny-morrison",
+    "xtrace_group_id": "grp_ae25250bacd220d537db44d1a8f7e385",
     "name": "Danny Morrison",
     "sport": "cricket",
     "notes": [
@@ -145,6 +157,7 @@
   },
   {
     "slug": "mark-nicholas",
+    "xtrace_group_id": "grp_de01f14acf110d055fe6a8cb4dbc6762",
     "name": "Mark Nicholas",
     "sport": "cricket",
     "notes": [
@@ -157,6 +170,7 @@
   },
   {
     "slug": "ramiz-raja",
+    "xtrace_group_id": "grp_d0406ec2a637b7f9e48ad7197a93c771",
     "name": "Ramiz Raja",
     "sport": "cricket",
     "notes": [
@@ -169,6 +183,7 @@
   },
   {
     "slug": "sourav-ganguly",
+    "xtrace_group_id": "grp_2a5a816bac1e97df3fbbeb454afd7331",
     "name": "Sourav Ganguly",
     "sport": "cricket",
     "notes": [

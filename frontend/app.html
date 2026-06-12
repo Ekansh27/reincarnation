@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Reincarnation — Cricket commentary, reimagined</title>
+<meta name="description" content="Type a cricket moment. Hear it called by a legendary commentator." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:            #0a0a0a;
+    --surface:       #111111;
+    --border:        #2a2a2a;
+    --border-active: #404040;
+    --text-primary:  #f0f0f0;
+    --text-secondary:#888888;
+    --text-muted:    #444444;
+    --accent:        #22c55e;
+    --accent-dim:    #16a34a;
+    --accent-glow:   rgba(34,197,94,0.12);
+    --error:         #ef4444;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 32px;
+  }
+  .wordmark {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+  }
+  h1 {
+    font-size: clamp(32px, 6vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin: 0 0 10px;
+    color: var(--text-primary);
+  }
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* Chips */
+  .chips-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 8px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .chip:hover { border-color: var(--border-active); color: var(--text-primary); }
+  .chip.selected {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  /* Input */
+  .input-row {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  input[type="text"] {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 13px 16px;
+    outline: none;
+    min-width: 0;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input[type="text"]::placeholder { color: var(--text-muted); }
+  input[type="text"]:focus {
+    border-color: var(--border-active);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  #generate {
+    flex-shrink: 0;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 13px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  #generate:hover:not(:disabled) { background: var(--accent-dim); }
+  #generate:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Status */
+  #status {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-height: 18px;
+  }
+  #status.error { color: var(--error); }
+
+  /* Quick fills */
+  .quick-fills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .quick-fill {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 9px;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .quick-fill:hover { color: var(--text-primary); border-color: var(--border-active); }
+
+  /* Output card */
+  .player {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-top: 14px;
+  }
+  .player.visible {
+    display: block;
+    animation: slide-up 0.2s ease forwards;
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .player-meta {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  audio {
+    width: 100%;
+    color-scheme: dark;
+    display: block;
+  }
+
+  /* Examples */
+  .examples {
+    margin-top: 48px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    width: 100%;
+    max-width: 560px;
+  }
+  .examples-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 16px;
+  }
+  .example-cards { display: flex; flex-direction: column; gap: 12px; }
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .example-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .example-moment {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+  .example-voice {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .example-transcript {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  /* Mobile */
+  @media (max-width: 560px) {
+    body { padding: 40px 20px; justify-content: flex-start; padding-top: 64px; }
+    .input-row { flex-direction: column; }
+    input[type="text"] {
+      border-right: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+    }
+    input[type="text"]:focus { box-shadow: none; }
+    #generate { border-radius: 0 0 8px 8px; justify-content: center; }
+    .example-top { flex-direction: column; align-items: flex-start; gap: 2px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .player.visible { animation: none; }
+    .spinner { animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <p class="wordmark">Reincarnation</p>
+    <h1>Hear any cricket moment in a legend's voice.</h1>
+    <p class="subtitle">Name a moment. Get live commentary from the commentator you choose.</p>
+  </div>
+
+  <p class="chips-label">Commentator</p>
+  <div class="chips" id="chips">
+    <button class="chip selected" data-name="Harsha Bhogle">Harsha Bhogle</button>
+    <button class="chip" data-name="Ravi Shastri">Ravi Shastri</button>
+    <button class="chip" data-name="Ian Bishop">Ian Bishop</button>
+    <button class="chip" data-name="Richie Benaud">Richie Benaud</button>
+    <button class="chip" data-name="Danny Morrison">Danny Morrison</button>
+    <button class="chip" data-name="Michael Holding">Michael Holding</button>
+    <button class="chip" data-name="Bill Lawry">Bill Lawry</button>
+    <button class="chip" data-name="Sunil Gavaskar">Sunil Gavaskar</button>
+    <button class="chip" data-name="Mark Nicholas">Mark Nicholas</button>
+    <button class="chip" data-name="Tony Greig">Tony Greig</button>
+    <button class="chip" data-name="Nasser Hussain">Nasser Hussain</button>
+    <button class="chip" data-name="David Lloyd">David Lloyd</button>
+    <button class="chip" data-name="Ian Smith">Ian Smith</button>
+    <button class="chip" data-name="Ramiz Raja">Ramiz Raja</button>
+    <button class="chip" data-name="Sourav Ganguly">Sourav Ganguly</button>
+  </div>
+
+  <div class="input-row">
+    <input type="text" id="query" placeholder="e.g. 2011 World Cup final, Botham at Headingley…" autocomplete="off" spellcheck="false" />
+    <button id="generate" type="button">
+      <div class="spinner" id="spinner"></div>
+      <span id="btn-label">Generate</span>
+    </button>
+  </div>
+
+  <div id="status"></div>
+
+  <div class="quick-fills">
+    <span class="quick-fill" onclick="fill('2011 World Cup final')">2011 WC final</span>
+    <span class="quick-fill" onclick="fill('Botham at Headingley 1981')">Botham at Headingley</span>
+    <span class="quick-fill" onclick="fill('Brathwaite four sixes 2016')">Brathwaite 2016</span>
+  </div>
+
+  <div class="player" id="player">
+    <div class="player-meta" id="player-meta">Harsha Bhogle</div>
+    <audio id="audio" controls></audio>
+  </div>
+</div>
+
+<div class="examples">
+  <p class="examples-label">Examples</p>
+  <div class="example-cards">
+    <div class="example-card">
+      <div class="example-top">
+        <span class="example-moment">2011 World Cup Final · Mumbai</span>
+        <span class="example-voice">Harsha Bhogle</span>
+      </div>
+      <p class="example-transcript">"…a man who has carried the weight of a billion expectations with such calm, now lifts it all away with one majestic blow over long-on. It ends here in Mumbai, in Sachin's city. India are World Champions."</p>
+    </div>
+    <div class="example-card">
+      <div class="example-top">
+        <span class="example-moment">2016 World T20 Final · Kolkata</span>
+        <span class="example-voice">Ian Bishop</span>
+      </div>
+      <p class="example-transcript">"Carlos Brathwaite! Carlos Brathwaite! Remember the name! Four sixes in the final over — West Indies are World Champions and the cricketing world has been turned upside down!"</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const queryEl     = document.getElementById('query');
+  const generateBtn = document.getElementById('generate');
+  const spinner     = document.getElementById('spinner');
+  const btnLabel    = document.getElementById('btn-label');
+  const statusEl    = document.getElementById('status');
+  const playerEl    = document.getElementById('player');
+  const playerMeta  = document.getElementById('player-meta');
+  const audioEl     = document.getElementById('audio');
+
+  let selectedCommentator = 'Harsha Bhogle';
+  document.getElementById('chips').addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    selectedCommentator = chip.dataset.name;
+    playerMeta.textContent = selectedCommentator;
+  });
+
+  function fill(text) {
+    queryEl.value = text;
+    queryEl.focus();
+  }
+
+  function setLoading(on) {
+    generateBtn.disabled = on;
+    spinner.style.display = on ? 'block' : 'none';
+    btnLabel.textContent = on ? 'Generating…' : 'Generate';
+  }
+
+  function setStatus(msg, type) {
+    statusEl.textContent = msg;
+    statusEl.className = type === 'error' ? 'error' : '';
+  }
+
+  queryEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') generateBtn.click();
+  });
+
+  generateBtn.addEventListener('click', async () => {
+    const query = queryEl.value.trim();
+    if (!query) { queryEl.focus(); return; }
+
+    setLoading(true);
+    setStatus('Finding the moment…');
+    playerEl.classList.remove('visible');
+
+    try {
+      const res = await fetch('/commentary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({ error: 'Unexpected error.' }));
+        setStatus(json.error || 'Something went wrong.', 'error');
+        return;
+      }
+
+      setStatus('Synthesising voice…');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+
+      if (audioEl.src) URL.revokeObjectURL(audioEl.src);
+      audioEl.src = url;
+      playerMeta.textContent = selectedCommentator;
+      playerEl.classList.add('visible');
+      setStatus('');
+      audioEl.play().catch(() => {});
+    } catch (err) {
+      setStatus('Network error — is the server running?', 'error');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+</html>

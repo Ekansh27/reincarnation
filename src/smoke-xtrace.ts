@@ -1,4 +1,4 @@
-import { fetchCommentators } from "./butterbase.js";
+import { fetchCommentators } from "./db.js";
 import { readStyle } from "./xtrace.js";
 
 /**

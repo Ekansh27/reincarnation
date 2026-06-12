@@ -1,10 +1,10 @@
-import { fetchMoments, fetchCommentators } from "./butterbase.js";
+import { fetchMoments, fetchCommentators } from "./db.js";
 import { readStyle } from "./xtrace.js";
 import { identifyMoment, generateCall } from "./rocketride.js";
 
 /**
  * End-to-end smoke test of the core loop WITHOUT Photon:
- *   Butterbase DB read → XTrace style read → identify (gateway) → reimagine (gateway)
+ *   Supabase DB read → XTrace style read → identify (Anthropic) → reimagine (Anthropic)
  *
  *   npm run smoke
  */
@@ -13,7 +13,7 @@ async function main() {
   console.log(`Query: ${query}\n`);
 
   const [moments, commentators] = await Promise.all([fetchMoments(), fetchCommentators()]);
-  console.log(`✓ Butterbase: ${moments.length} moments, ${commentators.length} commentators`);
+  console.log(`✓ Supabase: ${moments.length} moments, ${commentators.length} commentators`);
 
   const harsha = commentators.find((c) => c.slug === "harsha-bhogle");
   if (!harsha?.xtrace_group_id) throw new Error("Harsha not seeded — run `npm run seed`.");

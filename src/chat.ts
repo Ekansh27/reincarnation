@@ -11,7 +11,7 @@ import { createAgent } from "./agent.js";
  *   npm run chat
  */
 async function main() {
-  console.log("Loading catalogue from Butterbase...");
+  console.log("Loading catalogue from Supabase...");
   const agent = await createAgent();
   console.log(`  ${agent.commentators.length} commentators loaded.\n`);
   console.log(agent.helpText());
@@ -32,7 +32,7 @@ async function main() {
 
     try {
       const reply = await agent.handle(senderId, text);
-      console.log("\n" + reply + "\n");
+      console.log("\n" + reply.text + "\n");
     } catch (err) {
       console.error("⚠️ " + (err instanceof Error ? err.message : err) + "\n");
     }

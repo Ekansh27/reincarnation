@@ -29,7 +29,25 @@
       "Read(//Users/ekansharora/Library/Messages//**)",
       "Read(//Users/ekansharora/Library/Messages/**)",
       "Bash(grep -vE \"Loading|commentators loaded|Reincarnation|Name a commentator|Commentators:|Reply without|type 'exit'|^\\\\s*$\")",
-      "Bash(echo \"=== exit: $? \\(no matches = clean\\) ===\")"
+      "Bash(echo \"=== exit: $? \\(no matches = clean\\) ===\")",
+      "Bash(gh repo *)",
+      "mcp__butterbase__prep_and_submit_hackathon_entry",
+      "mcp__butterbase__create_frontend_deployment",
+      "Bash(curl -sS -X PUT \"https://37123cd43df39144ea4f81929bac9d46.r2.cloudflarestorage.com/butterbase-storage/app_7vvljeaymuzm/_deployments/9046485b-f652-4650-adec-9fe7328d15ee.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=448b0552dfa74ace79b91937a1f4ada2%2F20260606%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260606T000117Z&X-Amz-Expires=900&X-Amz-Signature=50f1d3cdfd503f88d9648832b9893fa046ffb8318162d7304932527e3790fe99&X-Amz-SignedHeaders=host&x-amz-meta-x-butterbase-app-id=app_7vvljeaymuzm&x-amz-meta-x-butterbase-deployment-id=9046485b-f652-4650-adec-9fe7328d15ee&x-id=PutObject\" -H \"Content-Type: application/zip\" --data-binary @frontend.zip -w \"HTTP %{http_code}\\\\n\")",
+      "mcp__butterbase__manage_frontend",
+      "Bash(git add *)",
+      "Bash(git push *)",
+      "Bash(curl -sS -X PUT \"https://37123cd43df39144ea4f81929bac9d46.r2.cloudflarestorage.com/butterbase-storage/app_7vvljeaymuzm/_deployments/b3e135d4-da3f-4ee4-b598-a2777772354c.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=448b0552dfa74ace79b91937a1f4ada2%2F20260606%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260606T000543Z&X-Amz-Expires=900&X-Amz-Signature=758d34f8368a1891f614f412a4a8afc0d8ffdeb11b488e9a9eb1f7cd79f4edde&X-Amz-SignedHeaders=host&x-amz-meta-x-butterbase-app-id=app_7vvljeaymuzm&x-amz-meta-x-butterbase-deployment-id=b3e135d4-da3f-4ee4-b598-a2777772354c&x-id=PutObject\" -H \"Content-Type: application/zip\" --data-binary @frontend.zip -w \"HTTP %{http_code}\\\\n\")",
+      "Bash(npm uninstall *)",
+      "Bash(node -p \"require\\('./node_modules/@anthropic-ai/sdk/package.json'\\).version\")",
+      "Bash(npm prune *)",
+      "Bash(node -e ' *)",
+      "Bash(ffprobe -v error -show_entries format=duration,size,format_name -of default=noprint_wrappers=1 /tmp/commentary.mp3)",
+      "Bash(rm -f src/_synthtest.ts /tmp/commentary.mp3)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('dependencies:', JSON.stringify\\(p.dependencies,null,2\\)\\); console.log\\('devDependencies:', JSON.stringify\\(p.devDependencies,null,2\\)\\)\")",
+      "Bash(npm ls *)",
+      "Bash(node -e \"const s=require\\('./package.json'\\).scripts.start; console.log\\('start =', s\\)\")",
+      "Bash(xargs grep -nIE \"sk-ant-[A-Za-z0-9]|eyJ[A-Za-z0-9_-]{20,}|xi-api-key\\\\\"?\\\\s*[:=]\\\\s*\\\\\"[A-Za-z0-9]|sk_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|service_role.*eyJ\")"
     ]
   }
 }

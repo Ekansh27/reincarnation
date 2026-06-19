@@ -1,15 +1,10 @@
 import "dotenv/config";
 import express from "express";
-import twilio from "twilio";
 import { createAgent } from "./agent.js";
 
-const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
-const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
-const WEBHOOK_URL = process.env.WEBHOOK_URL; // full public URL, e.g. https://xxx.railway.app/sms
-
-if (!ACCOUNT_SID || !AUTH_TOKEN) {
-  console.error("Missing TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN");
-  process.exit(1);
+function twimlReply(message: string): string {
+  const safe = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return `<?xml version="1.0" encoding="UTF-8"?><Response><Message>${safe}</Message></Response>`;
 }
 
 console.log("Loading catalogue from Supabase...");
@@ -20,34 +15,17 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 
 app.post("/sms", async (req, res) => {
-  // Validate Twilio signature when WEBHOOK_URL is set (skip in local dev if unset)
-  if (WEBHOOK_URL) {
-    const valid = twilio.validateRequest(
-      AUTH_TOKEN,
-      req.headers["x-twilio-signature"] as string ?? "",
-      WEBHOOK_URL,
-      req.body
-    );
-    if (!valid) {
-      res.status(403).send("Forbidden");
-      return;
-    }
-  }
-
   const from: string = req.body.From ?? "unknown";
   const text: string = (req.body.Body ?? "").trim();
-
-  const twiml = new twilio.twiml.MessagingResponse();
+  console.log(`[sms] from=${from} text="${text}"`);
 
   try {
     const reply = await agent.handle(from, text);
-    twiml.message(reply.text);
+    res.type("text/xml").send(twimlReply(reply.text));
   } catch (err) {
-    console.error("handler error:", err);
-    twiml.message("Something went wrong. Try again.");
+    console.error("[sms] handler error:", err);
+    res.type("text/xml").send(twimlReply("Something went wrong. Try again."));
   }
-
-  res.type("text/xml").send(twiml.toString());
 });
 
 const port = process.env.PORT ?? 3000;

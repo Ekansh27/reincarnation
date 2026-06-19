@@ -29,12 +29,13 @@ export const env = {
     pipeline: opt("ROCKETRIDE_PIPELINE", "reimagine"),
     fallback: opt("ROCKETRIDE_FALLBACK", "true") === "true",
   },
-  photon: {
-    projectId: opt("PHOTON_PROJECT_ID", ""),
-    projectSecret: opt("PHOTON_PROJECT_SECRET", ""),
+  twilio: {
+    accountSid: opt("TWILIO_ACCOUNT_SID", ""),
+    authToken: opt("TWILIO_AUTH_TOKEN", ""),
+    webhookUrl: opt("WEBHOOK_URL", ""),
   },
   elevenlabs: {
-    apiKey: req("ELEVENLABS_API_KEY"),
-    voiceId: req("ELEVENLABS_VOICE_ID"),
+    apiKey: opt("ELEVENLABS_API_KEY", ""),
+    voiceId: opt("ELEVENLABS_VOICE_ID", ""),
   },
 } as const;

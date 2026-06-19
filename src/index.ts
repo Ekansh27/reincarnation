@@ -1,59 +1,54 @@
-import { Spectrum, attachment } from "spectrum-ts";
-import { imessage } from "spectrum-ts/providers/imessage";
-import { env } from "./env.js";
+import "dotenv/config";
+import express from "express";
+import twilio from "twilio";
 import { createAgent } from "./agent.js";
-import { synthesize } from "./elevenlabs.js";
 
-/** Photon (Spectrum) = the iMessage delivery layer over the shared agent. */
-async function main() {
-  console.log("Loading catalogue from Supabase...");
-  const agent = await createAgent();
-  console.log(`  ${agent.commentators.length} commentators loaded.`);
+const ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const WEBHOOK_URL = process.env.WEBHOOK_URL; // full public URL, e.g. https://xxx.railway.app/sms
 
-  const app = await Spectrum({
-    projectId: env.photon.projectId,
-    projectSecret: env.photon.projectSecret,
-    providers: [imessage.config()],
-  });
+if (!ACCOUNT_SID || !AUTH_TOKEN) {
+  console.error("Missing TWILIO_ACCOUNT_SID or TWILIO_AUTH_TOKEN");
+  process.exit(1);
+}
 
-  console.log("📨 iMessage agent live. Text it a moment + a commentator.");
+console.log("Loading catalogue from Supabase...");
+const agent = await createAgent();
+console.log(`  ${agent.commentators.length} commentators loaded.`);
 
-  for await (const [space, message] of app.messages) {
-    if (message.content.type !== "text") {
-      await space.send('Send me a moment + a commentator as text, e.g. "Harsha Bhogle, 2011 WC final".');
-      continue;
-    }
-    const text = message.content.text.trim();
-    const senderId = message.sender?.id ?? "unknown";
+const app = express();
+app.use(express.urlencoded({ extended: false }));
 
-    try {
-      await space.responding(async () => {
-        const reply = await agent.handle(senderId, text);
-        await space.send(reply.text); // text first — lands instantly
-        if (reply.speech) {
-          try {
-            const audio = await synthesize(reply.speech); // MP3 buffer (env voice)
-            console.log(`[imessage] audio ${audio.byteLength} bytes for "${reply.speech.slice(0, 50)}…"`);
-            // attachment() (not voice()) — voice() transcodes to M4A + isAudioMessage, which the
-            // relay renders as a broken 0s bubble. A plain audio attachment plays inline reliably.
-            await space.send(attachment(audio, { mimeType: "audio/mpeg", name: "commentary.mp3" }));
-          } catch (ttsErr) {
-            console.error("TTS failed (text already sent):", ttsErr); // best-effort — text already delivered
-          }
-        }
-      });
-    } catch (err) {
-      console.error("handler error:", err);
-      await space.send(`⚠️ ${err instanceof Error ? err.message : "Something went wrong."}`);
+app.post("/sms", async (req, res) => {
+  // Validate Twilio signature when WEBHOOK_URL is set (skip in local dev if unset)
+  if (WEBHOOK_URL) {
+    const valid = twilio.validateRequest(
+      AUTH_TOKEN,
+      req.headers["x-twilio-signature"] as string ?? "",
+      WEBHOOK_URL,
+      req.body
+    );
+    if (!valid) {
+      res.status(403).send("Forbidden");
+      return;
     }
   }
 
-  // The Photon stream should stay open indefinitely; if it ends, exit non-zero
-  // so the host (Railway restartPolicy: ON_FAILURE) restarts and reconnects.
-  throw new Error("Photon message stream ended unexpectedly");
-}
+  const from: string = req.body.From ?? "unknown";
+  const text: string = (req.body.Body ?? "").trim();
 
-main().catch((err) => {
-  console.error("Fatal:", err);
-  process.exit(1);
+  const twiml = new twilio.twiml.MessagingResponse();
+
+  try {
+    const reply = await agent.handle(from, text);
+    twiml.message(reply.text);
+  } catch (err) {
+    console.error("handler error:", err);
+    twiml.message("Something went wrong. Try again.");
+  }
+
+  res.type("text/xml").send(twiml.toString());
 });
+
+const port = process.env.PORT ?? 3000;
+app.listen(port, () => console.log(`SMS webhook listening on :${port}`));

@@ -19,10 +19,13 @@
     "@supabase/supabase-js": "^2.45.0",
     "@xtraceai/memory": "^0.2.1",
     "dotenv": "^16.4.5",
+    "express": "^5.2.1",
     "spectrum-ts": "^1.18.0",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "twilio": "^6.0.2"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^22.9.0",
     "typescript": "^5.6.3"
   },

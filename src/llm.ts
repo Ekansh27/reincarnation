@@ -1,45 +1,55 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { env } from "./env.js";
 
 /**
- * LLM = Anthropic Messages API, called directly. Single entry point (`chat`)
- * with the same OpenAI-style message shape the rest of the app already uses;
- * we hoist the system message to Anthropic's top-level `system` param.
+ * LLM = Groq's OpenAI-compatible chat completions API (free tier, open-source
+ * Llama models). Single entry point (`chat`) with an OpenAI-style message shape;
+ * system messages pass through in the messages array (no hoisting needed).
  */
-const anthropic = new Anthropic({ apiKey: env.anthropic.apiKey });
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 export interface ChatMessage {
   role: "system" | "user" | "assistant";
   content: string;
 }
 
-export async function chat(messages: ChatMessage[], opts: { temperature?: number; maxTokens?: number; model?: string } = {}): Promise<string> {
-  const system = messages
-    .filter((m) => m.role === "system")
-    .map((m) => m.content)
-    .join("\n\n");
-  const turns = messages
-    .filter((m) => m.role !== "system")
-    .map((m) => ({ role: m.role as "user" | "assistant", content: m.content }));
+/**
+ * Map legacy model strings to Groq models: any "haiku" request → the fast tier,
+ * any other Anthropic alias → the default model, a real Groq model name passes
+ * through. Lets callers keep their fast/default intent without knowing Groq's ids.
+ */
+function resolveModel(requested?: string): string {
+  if (!requested) return env.groq.model;
+  if (/haiku/i.test(requested)) return env.groq.fastModel;
+  if (/^claude/i.test(requested)) return env.groq.model;
+  return requested;
+}
 
-  const res = await withRetry(
-    () =>
-      anthropic.messages.create({
-        model: opts.model ?? env.anthropic.model,
+export async function chat(messages: ChatMessage[], opts: { temperature?: number; maxTokens?: number; model?: string } = {}): Promise<string> {
+  const res = await withRetry(async () => {
+    const r = await fetch(GROQ_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.groq.apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: resolveModel(opts.model),
         max_tokens: opts.maxTokens ?? 600,
         temperature: opts.temperature ?? 0.8,
-        ...(system ? { system } : {}),
-        messages: turns,
+        messages,
       }),
-    "Anthropic",
-  );
+    });
+    if (!r.ok) {
+      const body = await r.text().catch(() => "");
+      const err = new Error(`Groq ${r.status}: ${body}`) as Error & { status?: number };
+      err.status = r.status;
+      throw err;
+    }
+    return (await r.json()) as { choices?: { message?: { content?: string } }[] };
+  }, "Groq");
 
-  const text = res.content
-    .filter((b): b is Anthropic.TextBlock => b.type === "text")
-    .map((b) => b.text)
-    .join("")
-    .trim();
-  if (!text) throw new Error("Anthropic returned no text content");
+  const text = (res.choices?.[0]?.message?.content ?? "").trim();
+  if (!text) throw new Error("Groq returned no text content");
   return text;
 }
 

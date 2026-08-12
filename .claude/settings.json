@@ -47,7 +47,8 @@
       "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('dependencies:', JSON.stringify\\(p.dependencies,null,2\\)\\); console.log\\('devDependencies:', JSON.stringify\\(p.devDependencies,null,2\\)\\)\")",
       "Bash(npm ls *)",
       "Bash(node -e \"const s=require\\('./package.json'\\).scripts.start; console.log\\('start =', s\\)\")",
-      "Bash(xargs grep -nIE \"sk-ant-[A-Za-z0-9]|eyJ[A-Za-z0-9_-]{20,}|xi-api-key\\\\\"?\\\\s*[:=]\\\\s*\\\\\"[A-Za-z0-9]|sk_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|service_role.*eyJ\")"
+      "Bash(xargs grep -nIE \"sk-ant-[A-Za-z0-9]|eyJ[A-Za-z0-9_-]{20,}|xi-api-key\\\\\"?\\\\s*[:=]\\\\s*\\\\\"[A-Za-z0-9]|sk_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|service_role.*eyJ\")",
+      "Bash(npm install *)"
     ]
   }
 }

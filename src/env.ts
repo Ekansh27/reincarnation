@@ -15,9 +15,10 @@ export const env = {
     url: req("SUPABASE_URL"),
     serviceKey: req("SUPABASE_SERVICE_KEY"),
   },
-  anthropic: {
-    apiKey: req("ANTHROPIC_API_KEY"),
-    model: opt("ANTHROPIC_MODEL", "claude-sonnet-4-6"),
+  groq: {
+    apiKey: req("GROQ_API_KEY"),
+    model: opt("GROQ_MODEL", "llama-3.3-70b-versatile"),
+    fastModel: opt("GROQ_MODEL_FAST", "llama-3.1-8b-instant"),
   },
   xtrace: {
     apiKey: req("XTRACE_API_KEY"),
@@ -29,13 +30,12 @@ export const env = {
     pipeline: opt("ROCKETRIDE_PIPELINE", "reimagine"),
     fallback: opt("ROCKETRIDE_FALLBACK", "true") === "true",
   },
-  twilio: {
-    accountSid: opt("TWILIO_ACCOUNT_SID", ""),
-    authToken: opt("TWILIO_AUTH_TOKEN", ""),
-    webhookUrl: opt("WEBHOOK_URL", ""),
+  photon: {
+    projectId: opt("PHOTON_PROJECT_ID", ""),
+    projectSecret: opt("PHOTON_PROJECT_SECRET", ""),
   },
   elevenlabs: {
-    apiKey: opt("ELEVENLABS_API_KEY", ""),
-    voiceId: opt("ELEVENLABS_VOICE_ID", ""),
+    apiKey: req("ELEVENLABS_API_KEY"),
+    voiceId: req("ELEVENLABS_VOICE_ID"),
   },
 } as const;
